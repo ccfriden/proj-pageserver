@@ -16,6 +16,7 @@ import socket    # Basic TCP/IP communication on the internet
 import random    # To pick a port at random, giving us some chance to pick a port not in use
 import _thread   # Response computation runs concurrently with main program
 import os
+import sys
 
 
 def listen(portnum):
@@ -73,7 +74,7 @@ def respond(sock):
         if file.endswith(".css") or file.endswith(".html"):
             MESSAGE = open(file).read()
 
-    if len(parts) > 1 and parts[0] == "GET":
+    if len(parts) > 1 and parts[0] == "GET" and (parts[1].endswith(".html") or parts[1].endswith(".css")) and ".." not in parts[1] and "~" not in parts[1] and "//" not in parts[1]:
         transmit("HTTP/1.0 200 OK\n\n", sock)
         transmit(MESSAGE, sock)
     else:
@@ -99,4 +100,3 @@ def main():
     serve(sock, respond)
 
 main()
-    
